@@ -1,8 +1,10 @@
+import time
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning, message=".*autocast.*", module="torch.cuda.amp")
 
 import cv2
 import easyocr
+import mysql.connector
 from ultralytics import YOLO
 
 # Cargar el Modelo Yolov8
@@ -12,13 +14,26 @@ model = YOLO("yolov8n.pt")
 lector = easyocr.Reader(['en'])
 
 # Definir los tipos de vehículos del modelo de yolo
-tiposVehiculo = ['car', 'truck', 'bus', 'motorcycle']
-
-# List of authorized plates
-matriculasPermitidas = ['GP255PV', 'M666YOB','SL593M']
+tiposVehiculo = ['car']
 
 # Inicializar webcam
 cap = cv2.VideoCapture(0)
+
+
+db = mysql.connector.connect(
+    host="localhost",
+    port=3306,
+    user="root",
+    passwd="1234",
+    database="SistemaMat"
+)
+
+cursor = db.cursor()
+
+def check_registro(texto_placa):
+    query = "select * from Matricula as mat join Usuario as usu on mat.DNI_Usuario_Resp = usu.DNI where usu.Fecha_Comienzo <= CURRENT_DATE and usu.Fecha_Final >= CURRENT_DATE and mat.Numero_Mat = %s"
+    cursor.execute(query, (texto_placa,))
+    return cursor.fetchone()
 
 while True:
     ret, frame = cap.read()
@@ -47,10 +62,13 @@ while True:
                 textoClaro = text.upper().replace(" ", "").replace("-", "").replace(".","")
                 if len(textoClaro) >= 5:
                     print(f"Detected Plate: {textoClaro} (conf: {prob:.2f})")
-                    if textoClaro in matriculasPermitidas:
-                        print(f"Placa dectada: {textoClaro} ✅ Acceso permitido")
-                    #else:
-                     #   print("❌ Acceso denegado")
+                    resultadoQuery = check_registro(textoClaro)
+                    if resultadoQuery is not None:
+                        print(f"✅ Acceso permitido, bienvenido {resultadoQuery[5]}")
+                        time.sleep(5)
+                    else:
+                        print("❌ Acceso denegado")
+                        time.sleep(0)
 
             # Dibujar cajas y texto de objetos
             cv2.rectangle(frame, (x1, y1), (x2, y2), (0,255,0), 2)
