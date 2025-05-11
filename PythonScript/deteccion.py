@@ -19,13 +19,15 @@ tiposVehiculo = ['car']
 # Inicializar webcam
 cap = cv2.VideoCapture(0)
 
+# Contador vehículos
 
+contadorVehiculos = 0
 db = mysql.connector.connect(
     host="localhost",
     port=3306,
     user="root",
     passwd="1234",
-    database="SistemaMat"
+    database="Sistema_Mat"
 )
 
 cursor = db.cursor()
@@ -65,6 +67,7 @@ while True:
                     resultadoQuery = check_registro(textoClaro)
                     if resultadoQuery is not None:
                         print(f"✅ Acceso permitido, bienvenido {resultadoQuery[5]}")
+                        contadorVehiculos += 1
                         time.sleep(5)
                     else:
                         print("❌ Acceso denegado")
@@ -73,6 +76,16 @@ while True:
             # Dibujar cajas y texto de objetos
             cv2.rectangle(frame, (x1, y1), (x2, y2), (0,255,0), 2)
             cv2.putText(frame, nombreClase, (x1, y1-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0,255,0), 2)
+
+    cv2.putText(
+        frame,
+        f"Contador: {contadorVehiculos}",
+        (20, 50),  # position (x, y)
+        cv2.FONT_HERSHEY_SIMPLEX,
+        1,  # font scale
+        (255, 255, 255),  # color (BGR)
+        1  # thickness
+    )
 
     # Mostrar imagen
     cv2.imshow("Reconocimiento de matrículas", frame)
