@@ -20,8 +20,9 @@ tiposVehiculo = ['car']
 cap = cv2.VideoCapture(0)
 
 # Contador vehículos
-
 contadorVehiculos = 0
+
+# Conexión BBDD
 db = mysql.connector.connect(
     host="localhost",
     port=3306,
@@ -33,17 +34,18 @@ db = mysql.connector.connect(
 cursor = db.cursor()
 
 def check_registro(texto_placa):
-    query = "select * from Matricula as mat join Usuario as usu on mat.DNI_Usuario_Resp = usu.DNI where usu.Fecha_Comienzo <= CURRENT_DATE and usu.Fecha_Final >= CURRENT_DATE and mat.Numero_Mat = %s"
+    query = "select * from matricula as mat join usuario as usu on mat.DNI_Usuario_Resp = usu.DNI where usu.Fecha_Comienzo <= CURRENT_DATE and usu.Fecha_Final >= CURRENT_DATE and mat.Numero_Mat = %s"
     cursor.execute(query, (texto_placa,))
     return cursor.fetchone()
 
+# Programa principal
 while True:
     ret, frame = cap.read()
     #frame = cv2.flip(frame, 1)
     if not ret:
         break
 
-    # Run YOLOv8 inference
+    # Ejecutar Yolo8
     results = model(frame, verbose=False)[0]
 
     for caja in results.boxes:
@@ -53,12 +55,12 @@ while True:
 
         if nombreClase in tiposVehiculo and conf > 0.5:
             x1, y1, x2, y2 = map(int, caja.xyxy[0])
-            cropped_vehicle = frame[y1:y2, x1:x2]
+            vehiculo = frame[y1:y2, x1:x2]
 
-            # Assume plate is in bottom half of vehicle
-            plate_region = cropped_vehicle[cropped_vehicle.shape[0]//2:, :]
+            # Asumir que la placa está en la parte de abajo del vehículo
+            plate_region = vehiculo[vehiculo.shape[0]//2:, :]
 
-            # OCR the cropped plate region
+            # Obtener placa
             ocr_results = lector.readtext(plate_region)
             for (bbox, text, prob) in ocr_results:
                 textoClaro = text.upper().replace(" ", "").replace("-", "").replace(".","")
