@@ -21,6 +21,7 @@ cap = cv2.VideoCapture(0)
 
 # Contador vehículos
 contadorVehiculos = 0
+maxVehiculos = 10
 
 # Conexión BBDD
 db = mysql.connector.connect(
@@ -68,12 +69,14 @@ while True:
                     print(f"Detected Plate: {textoClaro} (conf: {prob:.2f})")
                     resultadoQuery = check_registro(textoClaro)
                     if resultadoQuery is not None:
-                        print(f"✅ Acceso permitido, bienvenido {resultadoQuery[5]}")
-                        contadorVehiculos += 1
-                        time.sleep(5)
+                        if contadorVehiculos < maxVehiculos:
+                            print(f"✅ Acceso permitido. bienvenido {resultadoQuery[5]}")
+                            contadorVehiculos += 1
+                            time.sleep(5)
+                        else:
+                            print("❌ Acceso denegado: No has plazas libres")
                     else:
-                        print("❌ Acceso denegado")
-                        time.sleep(0)
+                        print("❌ Acceso denegado: Vehículo no autorizado")
 
             # Dibujar cajas y texto de objetos
             cv2.rectangle(frame, (x1, y1), (x2, y2), (0,255,0), 2)
