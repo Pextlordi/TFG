@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
 @Controller
 public class MatriculasController {
 
@@ -21,8 +25,16 @@ public class MatriculasController {
     private usuariorepo usuariorepo;
 
     @GetMapping("/matriculas")
-    public String mostrarMatriculas(Model model) {
-        model.addAttribute("matriculasList", matricularepo.findAll());
+    public String mostrarMatriculas(@RequestParam(required = false) boolean activos, Model model) {
+        List<Matricula> matriculas;
+
+        if (activos) {
+            LocalDate hoy = LocalDate.now();
+            matriculas = matricularepo.findActivas(hoy);
+        } else {
+            matriculas = matricularepo.findAll();
+        }
+        model.addAttribute("matriculasList", matriculas);
         return "matriculas";
     }
 
@@ -42,8 +54,13 @@ public class MatriculasController {
 
     @GetMapping("/matricula/{id}/modificar")
     public String modificarMatricula(Model model, @PathVariable("id") String id) {
+        Optional<Matricula> matricula = matricularepo.findById(id);
+        if (matricula.isPresent()) {
+            model.addAttribute("matricula", matricula.get());
+        } else {
+            model.addAttribute("matricula", new Matricula());
+        }
         model.addAttribute("usuariosList", usuariorepo.findAll());
-        model.addAttribute("matricula", matricularepo.findById(id));
         model.addAttribute("nuevo", false);
         return "formularioMatricula";
     }

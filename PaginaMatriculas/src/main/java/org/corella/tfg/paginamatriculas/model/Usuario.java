@@ -1,13 +1,12 @@
 package org.corella.tfg.paginamatriculas.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -21,41 +20,18 @@ public class Usuario {
     @Column(name = "Nombre_Completo", nullable = false, length = 200)
     private String nombreCompleto;
 
+    @Column(name = "Cargo", length = 50)
+    private String cargo;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "Fecha_Comienzo", nullable = false)
     private LocalDate fechaComienzo;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "Fecha_Final")
     private LocalDate fechaFinal;
 
-    public String getDni() {
-        return dni;
-    }
-
-    public void setDni(String dni) {
-        this.dni = dni;
-    }
-
-    public String getNombreCompleto() {
-        return nombreCompleto;
-    }
-
-    public void setNombreCompleto(String nombreCompleto) {
-        this.nombreCompleto = nombreCompleto;
-    }
-
-    public LocalDate getFechaComienzo() {
-        return fechaComienzo;
-    }
-
-    public void setFechaComienzo(LocalDate fechaComienzo) {
-        this.fechaComienzo = fechaComienzo;
-    }
-
-    public LocalDate getFechaFinal() {
-        return fechaFinal;
-    }
-
-    public void setFechaFinal(LocalDate fechaFinal) {
-        this.fechaFinal = fechaFinal;
-    }
+    @ManyToOne
+    @JoinColumn(name = "id_admin")
+    private Administrador adminPermiso;
 }

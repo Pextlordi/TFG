@@ -41,42 +41,33 @@
 </nav>
 
 <div class="container my-4 flex-grow-1">
-    <h2 th:text="${nuevo} ? 'Editar Usuario' : 'Crear Usuario'">Formulario</h2>
-    <form th:action="@{/usuario/guardar}" th:object="${usuario}" method="post">
+    <h2 th:text="'Usuario '+ ${usuario.nombreCompleto}"></h2>
+    <form th:object="${usuario}">
         <div class="mb-3">
             <label for="dni" class="form-label">DNI</label>
-            <input type="text" th:field="*{dni}" class="form-control" id="dni" required maxlength="9">
+            <input type="text" th:field="*{dni}" class="form-control" id="dni" readonly>
         </div>
         <div class="mb-3">
             <label for="nombreCompleto" class="form-label">Nombre Completo</label>
-            <input type="text" th:field="*{nombreCompleto}" class="form-control" id="nombreCompleto" maxlength="200">
+            <input type="text" th:field="*{nombreCompleto}" class="form-control" id="nombreCompleto" readonly>
         </div>
         <div class="mb-3">
             <label for="cargo" class="form-label">Cargo</label>
-            <input type="text" th:field="*{cargo}" class="form-control" id="cargo" required>
+            <input type="text" th:field="*{cargo}" class="form-control" id="cargo" readonly>
         </div>
         <div class="mb-3">
             <label for="fechaComienzo" class="form-label">Fecha Comienzo</label>
-            <input type="date" th:field="*{fechaComienzo}" class="form-control" id="fechaComienzo" required>
+            <input type="date" th:field="*{fechaComienzo}" class="form-control" id="fechaComienzo" readonly>
         </div>
         <div class="mb-3">
             <label for="fechaFinal" class="form-label">Fecha Final</label>
-            <input type="date" th:field="*{fechaFinal}" class="form-control" id="fechaFinal">
+            <input type="date" th:field="*{fechaFinal}" class="form-control" id="fechaFinal" readonly>
         </div>
         <div class="mb-3">
             <label for="admin" class="form-label">Autorizado por</label>
-            <select class="form-select" id="admin" th:field="*{adminPermiso}" required>
-                <option th:value="__${null}__" th:selected="${usuario.adminPermiso == null}">-</option>
-                <option th:each="admin : ${listaAdmins}"
-                        th:value="${admin.id}"
-                        th:text="${admin.nombreCompleto}"
-                        th:selected="${usuario.adminPermiso != null and usuario.adminPermiso.id == admin.id}">
-                </option>
-                </option>
-            </select>
+            <input type="text" th:field="*{adminPermiso.nombreCompleto}" class="form-control" id="admin" readonly>
         </div>
-        <button type="submit" class="btn btn-success">Guardar</button>
-        <a href="/usuarios" class="btn btn-secondary">Cancelar</a>
+        <a th:href="@{/usuario/{id}/modificar(id=${usuario.dni})}" class="btn btn-secondary">Modificar</a>
     </form>
 </div>
 

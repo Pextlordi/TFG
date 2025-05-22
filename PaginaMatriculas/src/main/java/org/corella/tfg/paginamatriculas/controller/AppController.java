@@ -15,6 +15,6 @@ public class AppController {
 
     @GetMapping("/")
     public String index(Model model) {
-        return "redirect:/matriculas";
+        return "login";
     }
 }

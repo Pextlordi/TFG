@@ -7,26 +7,50 @@
 </head>
 <body class="d-flex flex-column min-vh-100">
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-success">
+<nav class="navbar navbar-expand-lg navbar-dark bg-success shadow-sm">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/">Gestión de Matrículas</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarNav" aria-controls="navbarNav"
-                aria-expanded="false" aria-label="Alternar navegación">
+        <a class="navbar-brand fw-bold" href="/matriculas">SisMat</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item"><a class="nav-link" href="/matriculas">Matrículas</a></li>
-                <li class="nav-item"><a class="nav-link" href="/usuarios">Usuarios</a></li>
+
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" href="/matriculas">Matrículas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/usuarios">Usuarios</a>
+                </li>
             </ul>
+            <div >
+                <div class="dropdown">
+                    <a href="#" class="btn btn-outline-light dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person-circle me-2"></i>
+                        <span>Admin</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item text-danger" href="/">Cerrar sesión</a></li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 </nav>
 
 <div class="container mt-4">
-    <div class="d-flex justify-content-between mb-3">
-        <h2>Matriculas</h2>
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <h2 class="mb-0">Matriculas</h2>
+        <form id="filterForm" method="get" action="/matriculas" class="d-flex align-items-center">
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="activeOnly" name="activos"
+                       onchange="document.getElementById('filterForm').submit();"
+                       th:checked="${param.activos != null}">
+                <label class="form-check-label ms-2" for="activeOnly">Hoy válidos</label>
+            </div>
+        </form>
         <a href="/matriculas/crear" class="btn btn-success">Agregar Matrícula</a>
     </div>
     <table class="table table-striped">
@@ -35,13 +59,17 @@
             <th>Número de matrícula</th>
             <th>Descripción del vehículo</th>
             <th>Propietario</th>
+            <th>Autorizado Por</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="matricula : ${matriculasList}">
             <td th:text="${matricula.numeroMat}"></td>
             <td th:text="${matricula.descVehiculo}"></td>
-            <td th:text="${matricula.dniUsuarioResp.nombreCompleto}"></td>
+            <td>
+                <a th:href="@{/usuario/{id}(id=${matricula.usuarioResp.dni})}" th:text="${matricula.usuarioResp.nombreCompleto}"></a>
+            </td>
+            <td th:text="${matricula.usuarioResp.adminPermiso != null ? matricula.usuarioResp.adminPermiso.nombreCompleto : ''}"></td>
             <td>
                 <a th:href="@{'/matricula/' + ${matricula.numeroMat} + '/modificar'}" class="btn btn-outline-primary btn-sm me-2">
                     <img src="/images/edit.png" alt="Borrar" width="20" height="20"/>
