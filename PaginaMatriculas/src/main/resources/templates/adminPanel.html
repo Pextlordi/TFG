@@ -24,15 +24,15 @@
                     <a class="nav-link" href="/matriculas">Matrículas</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="/usuarios">Usuarios</a>
+                    <a class="nav-link" href="/usuarios">Usuarios</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin">Panel Admin</a>
+                    <a class="nav-link active" href="/admin">Panel Admin</a>
                 </li>
             </ul>
             <div >
                 <div class="dropdown">
-                    <a class="btn btn-outline-light dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a href="#" class="btn btn-outline-light dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-person-circle me-2"></i>
                         <span>Admin</span>
                     </a>
@@ -46,47 +46,53 @@
 </nav>
 
 <div class="container mt-4">
+    <div class="card mb-4">
+        <div class="card-header bg-secondary text-white">
+            Variables del Sistema
+        </div>
+        <div class="card-body">
+            <p><strong>Modo de Operación:</strong> <span class="badge bg-success">Activo</span></p>
+            <p><strong>Última Actualización:</strong> 23/05/2025</p>
+            <p><strong>Ocupación actual:</strong> 1</p>
+            <p><strong>Capacidad máxima de vehículos:</strong> 10</p>
+        </div>
+    </div>
     <div class="d-flex justify-content-between mb-3">
-        <h2 class="mb-0">Usuarios</h2>
-        <form id="filterForm" method="get" action="/usuarios" class="d-flex align-items-center">
+        <h2 class="mb-0">Administradores</h2>
+        <form id="filterForm" method="get" action="/admin" class="d-flex align-items-center">
             <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="activeOnly" name="activos"
+                <input class="form-check-input" type="checkbox" id="activeOnly" name="conPermiso"
                        onchange="document.getElementById('filterForm').submit();"
-                       th:checked="${param.activos != null}">
-                <label class="form-check-label ms-2" for="activeOnly">Hoy válidos</label>
+                       th:checked="${param.conPermiso != null}">
+                <label class="form-check-label ms-2" for="activeOnly">Tiene Permisos</label>
             </div>
         </form>
-        <a href="/usuario/crear" class="btn btn-success">Agregar Usuario</a>
+        <a href="/administrador/crear" class="btn btn-success">Agregar administrador</a>
     </div>
     <table class="table table-striped">
         <thead>
         <tr>
-            <th>DNI</th>
             <th>Nombre Completo</th>
             <th>Cargo</th>
-            <th>Autorizado Por</th>
-            <th>Fecha Comienzo</th>
-            <th>Fecha Final</th>
+            <th>Permiso</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="usuario : ${usuariosList}">
-            <td>
-                <a th:href="@{/usuario/{id}(id=${usuario.dni})}" th:text="${usuario.dni}"></a>
+        <tr th:each="admin : ${adminList}">
+            <td >
+                <a th:href="@{/administrador/{id}(id=${admin.id})}" th:text="${admin.nombreCompleto}"></a>
             </td>
-            <td th:text="${usuario.nombreCompleto}"></td>
-            <td th:text="${usuario.cargo}"></td>
-            <td th:text="${usuario.adminPermiso != null ? usuario.adminPermiso.nombreCompleto : ''}"></td>
-            <td th:text="${usuario.fechaComienzo}"></td>
-            <td th:text="${usuario.fechaFinal}"></td>
+            <td th:text="${admin.cargo}"></td>
+            <td th:text="${admin.permiso} ? 'Sí' : 'No'"></td>
             <td>
-                <a th:href="@{'/usuario/' + ${usuario.dni} +'/modificar'}" class="btn btn-outline-primary btn-sm me-2">
-                    <img src="/images/edit.png" alt="Editar" width="20" height="20"/>
+                <a th:href="@{'/administrador/' + ${admin.id} + '/modificar'}" class="btn btn-outline-primary btn-sm me-2">
+                    <img src="/images/edit.png" alt="Borrar" width="20" height="20"/>
                 </a>
-                <a th:href="@{'/usuario/' + ${usuario.dni} + '/borrar'}" class="btn btn-outline-danger btn-sm">
+                <a th:href="@{'/administrador/'+ ${admin.id} +'/borrar'}" class="btn btn-outline-danger btn-sm">
                     <img src="/images/delete.png" alt="Borrar" width="20" height="20"/>
                 </a>
             </td>
+
         </tr>
         </tbody>
     </table>

@@ -22,7 +22,7 @@ camara_salida = cv2.VideoCapture(1)
 
 # Contador vehículos
 contadorVehiculos = 0
-maxVehiculos = 10
+maxVehiculos = 1
 
 # Conexión BBDD
 db = mysql.connector.connect(
@@ -78,7 +78,7 @@ def detectar_y_procesar_entrada(frame):
 
             cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
             cv2.putText(frame, nombreClase, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
-
+    time.sleep(0)
     cv2.putText(frame, f"Contador: {contadorVehiculos}", (20, 50),
                 cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 1)
     return frame
@@ -103,9 +103,7 @@ def detectar_y_procesar_salida(frame):
             cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 0), 2)
             cv2.putText(frame, "Salida", (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255, 0, 0), 2)
             break  # Solo contar un vehículo por frame
-
-    cv2.putText(frame, f"Contador: {contadorVehiculos}", (20, 50),
-                cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 1)
+    time.sleep(0)
     return frame
 
 

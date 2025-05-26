@@ -27,7 +27,6 @@ public class UsuariosController {
     @GetMapping("/usuarios")
     public String mostrarUsuarios(@RequestParam(required = false) boolean activos, Model model) {
         List<Usuario> usuarios;
-
         if (activos) {
             LocalDate hoy = LocalDate.now();
             usuarios = usuariorepo.findActivas(hoy);

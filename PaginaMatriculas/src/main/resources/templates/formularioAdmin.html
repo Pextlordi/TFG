@@ -24,10 +24,10 @@
                     <a class="nav-link" href="/matriculas">Matrículas</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="/usuarios">Usuarios</a>
+                    <a class="nav-link" href="/usuarios">Usuarios</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin">Panel Admin</a>
+                    <a class="nav-link active" href="/admin">Panel Admin</a>
                 </li>
             </ul>
             <div >
@@ -46,33 +46,30 @@
 </nav>
 
 <div class="container my-4 flex-grow-1">
-    <h2 th:text="'Usuario '+ ${usuario.nombreCompleto}"></h2>
-    <form th:object="${usuario}">
-        <div class="mb-3">
-            <label for="dni" class="form-label">DNI</label>
-            <input type="text" th:field="*{dni}" class="form-control" id="dni" readonly>
-        </div>
+    <h2 th:text="${nuevo} != null ? 'Editar Administrador' : 'Agregar Administrador'">Formulario</h2>
+    <form th:action="@{/administrador/guardar}" th:object="${admin}" method="post">
+        <input type="hidden" th:field="*{id}"/>
         <div class="mb-3">
             <label for="nombreCompleto" class="form-label">Nombre Completo</label>
-            <input type="text" th:field="*{nombreCompleto}" class="form-control" id="nombreCompleto" readonly>
+            <input type="text" th:field="*{nombreCompleto}" class="form-control" id="nombreCompleto" required>
         </div>
         <div class="mb-3">
             <label for="cargo" class="form-label">Cargo</label>
-            <input type="text" th:field="*{cargo}" class="form-control" id="cargo" readonly>
+            <input type="text" th:field="*{cargo}" class="form-control" id="cargo" required>
         </div>
         <div class="mb-3">
-            <label for="fechaComienzo" class="form-label">Fecha Comienzo</label>
-            <input type="date" th:field="*{fechaComienzo}" class="form-control" id="fechaComienzo" readonly>
+            <label for="admin" class="form-label">Permiso</label>
+            <select class="form-select" id="admin" th:field="*{permiso}" required>
+                <option th:value="true"
+                        th:text="Sí">
+                </option>
+                <option th:value="false"
+                        th:text="No">
+                </option>
+            </select>
         </div>
-        <div class="mb-3">
-            <label for="fechaFinal" class="form-label">Fecha Final</label>
-            <input type="date" th:field="*{fechaFinal}" class="form-control" id="fechaFinal" readonly>
-        </div>
-        <div class="mb-3">
-            <label for="admin" class="form-label">Autorizado por</label>
-            <input type="text" th:field="*{adminPermiso.nombreCompleto}" class="form-control" id="admin" readonly>
-        </div>
-        <a th:href="@{/usuario/{id}/modificar(id=${usuario.dni})}" class="btn btn-secondary">Modificar</a>
+        <button type="submit" class="btn btn-success">Guardar</button>
+        <a href="/admin" class="btn btn-secondary">Cancelar</a>
     </form>
 </div>
 
