@@ -1,8 +1,6 @@
 package org.corella.tfg.paginamatriculas.controller;
 
 import org.corella.tfg.paginamatriculas.model.Administrador;
-import org.corella.tfg.paginamatriculas.model.Matricula;
-import org.corella.tfg.paginamatriculas.model.Usuario;
 import org.corella.tfg.paginamatriculas.repository.administradorrepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,8 +9,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import java.util.Optional;
+
+/**
+ * Esta clase se dedica a las funcionalidades de elementos del panel de admin y objetos administrador del sistema de la página web.
+ * @author Petteri Ketola
+ * @version 27-05-2025
+ */
 
 @Controller
 public class AdministradorController {

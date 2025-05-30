@@ -6,6 +6,12 @@ import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+/**
+ * Esta clase representa los objetos de la tabla matricula de la base de datos de SisMat.
+ * @author Petteri Ketola
+ * @version 27-05-2025
+ */
+
 @Getter
 @Setter
 @Entity

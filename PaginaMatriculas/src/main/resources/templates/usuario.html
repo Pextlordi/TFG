@@ -74,6 +74,38 @@
         </div>
         <a th:href="@{/usuario/{id}/modificar(id=${usuario.dni})}" class="btn btn-secondary">Modificar</a>
     </form>
+    <div class="card p-4 mt-4">
+        <h4>Matrículas</h4>
+        <div th:if="${usuario.matriculas != null and !usuario.matriculas.isEmpty()}">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Número de matrícula</th>
+                    <th>Descripción del vehículo</th>
+                    <th>Autorizado Por</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="matricula : ${usuario.matriculas}">
+                    <td th:text="${matricula.numeroMat}"></td>
+                    <td th:text="${matricula.descVehiculo}"></td>
+                    <td th:text="${matricula.usuarioResp.adminPermiso != null ? matricula.usuarioResp.adminPermiso.nombreCompleto : ''}"></td>
+                    <td>
+                        <a th:href="@{'/matricula/' + ${matricula.numeroMat} + '/modificar'}" class="btn btn-outline-primary btn-sm me-2">
+                            <img src="/images/edit.png" alt="Borrar" width="20" height="20"/>
+                        </a>
+                        <a th:href="@{'/matricula/'+ ${matricula.numeroMat} +'/borrar'}" class="btn btn-outline-danger btn-sm">
+                            <img src="/images/delete.png" alt="Borrar" width="20" height="20"/>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div th:if="${usuario.matriculas == null or usuario.matriculas.isEmpty()}">
+            <p class="text-muted">Este usuario no tiene matrículas asociadas.</p>
+        </div>
+    </div>
 </div>
 
 <footer class="bg-success text-white text-center py-3 mt-auto">

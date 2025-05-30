@@ -15,6 +15,12 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Esta clase se dedica a las funcionalidades de elementos de la sección de matrículas de la página web.
+ * @author Petteri Ketola
+ * @version 27-05-2025
+ */
+
 @Controller
 public class MatriculasController {
 

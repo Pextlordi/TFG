@@ -16,6 +16,12 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Esta clase se dedica a las funcionalidades de elementos de la sección de usuarios de la página web.
+ * @author Petteri Ketola
+ * @version 27-05-2025
+ */
+
 @Controller
 public class UsuariosController {
     @Autowired
@@ -60,7 +66,7 @@ public class UsuariosController {
     @PostMapping("/usuario/guardar")
     public String guardarUsuario(Usuario user) {
         usuariorepo.save(user);
-        return "redirect:/usuarios";
+        return "redirect:/usuario/" + user.getDni();
     }
 
     @GetMapping("/usuario/{id}/modificar")

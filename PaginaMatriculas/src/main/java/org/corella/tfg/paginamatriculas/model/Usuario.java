@@ -7,6 +7,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
+
+/**
+ * Esta clase representa los objetos de la tabla usuario de la base de datos de SisMat.
+ * @author Petteri Ketola
+ * @version 27-05-2025
+ */
 
 @Getter
 @Setter
@@ -34,4 +41,7 @@ public class Usuario {
     @ManyToOne
     @JoinColumn(name = "id_admin")
     private Administrador adminPermiso;
+
+    @OneToMany(mappedBy = "usuarioResp", fetch = FetchType.LAZY)
+    private List<Matricula> matriculas;
 }

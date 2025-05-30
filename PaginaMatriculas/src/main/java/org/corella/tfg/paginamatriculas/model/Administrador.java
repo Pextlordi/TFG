@@ -4,6 +4,12 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Esta clase representa los objetos de la tabla administrador de la base de datos de SisMat.
+ * @author Petteri Ketola
+ * @version 27-05-2025
+ */
+
 @Getter
 @Setter
 @Entity

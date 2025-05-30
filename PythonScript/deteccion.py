@@ -17,12 +17,12 @@ lector = easyocr.Reader(['en'])
 tiposVehiculo = ['car']
 
 # Inicializar webcams para entrada y salida
-camara_entrada = cv2.VideoCapture(0)
-camara_salida = cv2.VideoCapture(1)
+camara_entrada = cv2.VideoCapture(1)
+camara_salida = cv2.VideoCapture(0)
 
 # Contador vehículos
 contadorVehiculos = 0
-maxVehiculos = 1
+maxVehiculos = 10
 
 # Conexión BBDD
 db = mysql.connector.connect(
@@ -62,13 +62,13 @@ def detectar_y_procesar_entrada(frame):
             # Obtener placa
             ocr_results = lector.readtext(plate_region)
             for (_, text, prob) in ocr_results:
-                textoClaro = text.upper().replace(" ", "").replace("-", "").replace(".", "")
+                textoClaro = text.upper().replace(" ", "").replace("-", "").replace(".", "").replace(",", "").replace("_", "").replace("(", "").replace(")", "").replace("[", "").replace("]", "").replace("|", "").replace("\"", "")
                 if len(textoClaro) >= 5:
                     print(f"Detected Plate: {textoClaro} (conf: {prob:.2f})")
                     resultadoQuery = check_registro(textoClaro)
                     if resultadoQuery is not None:
                         if contadorVehiculos < maxVehiculos:
-                            print(f"✅ Acceso permitido. Bienvenido {resultadoQuery[5]}.")
+                            print(f"✅ Acceso permitido. Bienvenido {resultadoQuery[4]}.")
                             contadorVehiculos += 1
                             time.sleep(5)  # Esperar para evitar múltiples cuentas seguidas
                         else:
@@ -80,7 +80,7 @@ def detectar_y_procesar_entrada(frame):
             cv2.putText(frame, nombreClase, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
     time.sleep(0)
     cv2.putText(frame, f"Contador: {contadorVehiculos}", (20, 50),
-                cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 1)
+                cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 255), 2)
     return frame
 
 
@@ -109,6 +109,7 @@ def detectar_y_procesar_salida(frame):
 
 while True:
     ret_entrada, frame_entrada = camara_entrada.read()
+    time.sleep(0.1)
     ret_salida, frame_salida = camara_salida.read()
 
     if ret_entrada:

@@ -9,6 +9,12 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Esta interfaz representa la obtención de elementos de la tabla usuario de la base de datos de SisMat.
+ * @author Petteri Ketola
+ * @version 27-05-2025
+ */
+
 @Repository
 public interface usuariorepo extends JpaRepository<Usuario, String> {
     @Query("SELECT usu FROM Usuario as usu WHERE usu.fechaComienzo <= :hoy AND (usu.fechaFinal IS NULL OR usu.fechaFinal >= :hoy)")
